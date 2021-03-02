@@ -206,12 +206,12 @@ class InferenceDataConverter:  # pylint: disable=too-many-instance-attributes
             ]
         log_likelihood_dict = _DefaultTrace(len(trace.chains))
         for var, log_like_fun in cached:
-            for chain in trace.chains:
+            for k, chain in enumerate(trace.chains):
                 log_like_chain = [
                     self.log_likelihood_vals_point(point, var, log_like_fun)
                     for point in trace.points([chain])
                 ]
-                log_likelihood_dict.insert(var.name, np.stack(log_like_chain), chain)
+                log_likelihood_dict.insert(var.name, np.stack(log_like_chain), k)
         return log_likelihood_dict.trace_dict
 
     @requires("trace")
